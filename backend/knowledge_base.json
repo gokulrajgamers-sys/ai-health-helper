@@ -1,0 +1,100 @@
+{
+  "conditions": [
+    {
+      "id": "common_cold",
+      "name": "Common Cold",
+      "symptoms": ["runny nose", "sneezing", "sore throat", "cough", "congestion", "mild fever", "fatigue", "headache"],
+      "severity": "mild",
+      "description": "A viral infection of the upper respiratory tract, usually resolving within 7-10 days.",
+      "advice": "Rest, stay hydrated, and use over-the-counter remedies for symptom relief. See a doctor if symptoms persist beyond 10 days or worsen."
+    },
+    {
+      "id": "flu",
+      "name": "Influenza (Flu)",
+      "symptoms": ["fever", "chills", "muscle aches", "fatigue", "headache", "cough", "sore throat", "runny nose"],
+      "severity": "moderate",
+      "description": "A contagious viral respiratory illness that can range from mild to severe.",
+      "advice": "Rest and fluids are key. Antiviral medications may help if started early. Seek care if breathing difficulty, chest pain, or persistent high fever occurs."
+    },
+    {
+      "id": "migraine",
+      "name": "Migraine",
+      "symptoms": ["severe headache", "nausea", "sensitivity to light", "sensitivity to sound", "vomiting", "visual disturbances", "throbbing pain"],
+      "severity": "moderate",
+      "description": "A neurological condition causing intense, debilitating headaches often with other symptoms.",
+      "advice": "Rest in a dark, quiet room. Consider known triggers. If migraines are frequent or severe, consult a neurologist."
+    },
+    {
+      "id": "gastroenteritis",
+      "name": "Gastroenteritis (Stomach Flu)",
+      "symptoms": ["nausea", "vomiting", "diarrhea", "abdominal pain", "cramping", "mild fever", "fatigue"],
+      "severity": "mild",
+      "description": "Inflammation of the stomach and intestines, usually caused by a virus or bacteria.",
+      "advice": "Stay hydrated with fluids and electrolytes. Seek medical attention if unable to keep fluids down, or if symptoms persist beyond a few days."
+    },
+    {
+      "id": "allergic_rhinitis",
+      "name": "Allergic Rhinitis (Allergies)",
+      "symptoms": ["sneezing", "runny nose", "itchy eyes", "watery eyes", "congestion", "itchy throat"],
+      "severity": "mild",
+      "description": "An allergic response to airborne substances like pollen, dust, or pet dander.",
+      "advice": "Antihistamines and avoiding known allergens can help. Consult a doctor if symptoms are persistent or severe."
+    },
+    {
+      "id": "covid19",
+      "name": "COVID-19",
+      "symptoms": ["fever", "cough", "shortness of breath", "loss of taste", "loss of smell", "fatigue", "muscle aches", "sore throat", "headache"],
+      "severity": "moderate",
+      "description": "A respiratory illness caused by the SARS-CoV-2 virus, with variable severity.",
+      "advice": "Test if possible, isolate, and monitor symptoms. Seek immediate care for difficulty breathing, persistent chest pain, or confusion."
+    },
+    {
+      "id": "urinary_tract_infection",
+      "name": "Urinary Tract Infection (UTI)",
+      "symptoms": ["burning urination", "frequent urination", "urgency", "pelvic pain", "cloudy urine", "lower abdominal pain"],
+      "severity": "moderate",
+      "description": "A bacterial infection affecting any part of the urinary system.",
+      "advice": "See a doctor for antibiotic treatment. Untreated UTIs can spread to the kidneys."
+    },
+    {
+      "id": "anxiety",
+      "name": "Anxiety",
+      "symptoms": ["rapid heartbeat", "sweating", "trembling", "shortness of breath", "restlessness", "difficulty concentrating", "fatigue", "muscle tension"],
+      "severity": "mild",
+      "description": "A mental health condition characterized by excessive worry and physical tension.",
+      "advice": "Relaxation techniques, exercise, and talking to a mental health professional can help. Seek urgent care if experiencing a panic attack with chest pain."
+    },
+    {
+      "id": "myocardial_infarction",
+      "name": "Possible Heart Attack",
+      "symptoms": ["chest pain", "chest pressure", "pain radiating to arm", "shortness of breath", "cold sweat", "nausea", "lightheadedness", "jaw pain"],
+      "severity": "emergency",
+      "description": "A medical emergency where blood flow to the heart is blocked.",
+      "advice": "CALL EMERGENCY SERVICES IMMEDIATELY. Do not drive yourself. This is a life-threatening emergency."
+    },
+    {
+      "id": "stroke",
+      "name": "Possible Stroke",
+      "symptoms": ["facial drooping", "arm weakness", "slurred speech", "sudden confusion", "sudden numbness", "severe headache", "vision loss", "loss of balance"],
+      "severity": "emergency",
+      "description": "A medical emergency caused by interrupted blood supply to the brain.",
+      "advice": "CALL EMERGENCY SERVICES IMMEDIATELY. Note the time symptoms started. This is a life-threatening emergency."
+    },
+    {
+      "id": "appendicitis",
+      "name": "Possible Appendicitis",
+      "symptoms": ["abdominal pain", "pain near navel", "pain lower right abdomen", "nausea", "vomiting", "fever", "loss of appetite"],
+      "severity": "emergency",
+      "description": "Inflammation of the appendix that can rupture if untreated.",
+      "advice": "Seek emergency care immediately. Do not eat or drink. This requires urgent medical evaluation."
+    },
+    {
+      "id": "tension_headache",
+      "name": "Tension Headache",
+      "symptoms": ["dull headache", "pressure around head", "tightness in scalp", "neck pain", "mild sensitivity to light"],
+      "severity": "mild",
+      "description": "The most common type of headache, often linked to stress or muscle tension.",
+      "advice": "Rest, hydration, and over-the-counter pain relief usually help. See a doctor if headaches become frequent or severe."
+    }
+  ]
+}
