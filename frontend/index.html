@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>AI Health Symptom Assistant</title>
+<style>
+  :root {
+    --bg: #f6f8fb;
+    --card: #ffffff;
+    --primary: #2563eb;
+    --primary-dark: #1d4ed8;
+    --text: #1e293b;
+    --muted: #64748b;
+    --border: #e2e8f0;
+    --emergency: #dc2626;
+    --moderate: #d97706;
+    --mild: #16a34a;
+    --radius: 12px;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+  }
+  header {
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    color: white;
+    padding: 28px 20px;
+    text-align: center;
+  }
+  header h1 { margin: 0 0 6px; font-size: 1.6rem; }
+  header p { margin: 0; opacity: 0.9; font-size: 0.95rem; }
+
+  .container {
+    max-width: 720px;
+    margin: -20px auto 40px;
+    padding: 0 16px;
+  }
+  .card {
+    background: var(--card);
+    border-radius: var(--radius);
+    padding: 20px;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.06);
+    margin-bottom: 20px;
+  }
+  textarea {
+    width: 100%;
+    min-height: 100px;
+    padding: 12px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-size: 1rem;
+    font-family: inherit;
+    resize: vertical;
+  }
+  button {
+    background: var(--primary);
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 8px;
+    font-size: 1rem;
+    cursor: pointer;
+    margin-top: 12px;
+  }
+  button:hover { background: var(--primary-dark); }
+  button:disabled { background: #94a3b8; cursor: not-allowed; }
+
+  .disclaimer {
+    font-size: 0.8rem;
+    color: var(--muted);
+    margin-top: 10px;
+    line-height: 1.4;
+  }
+
+  .emergency-banner {
+    background: #fee2e2;
+    border: 1px solid var(--emergency);
+    color: var(--emergency);
+    padding: 14px;
+    border-radius: 8px;
+    font-weight: 600;
+    margin-bottom: 16px;
+  }
+
+  .match {
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px;
+    margin-bottom: 12px;
+  }
+  .match-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 6px;
+  }
+  .match-header h3 { margin: 0; font-size: 1.05rem; }
+  .badge {
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    border-radius: 999px;
+    color: white;
+  }
+  .badge.emergency { background: var(--emergency); }
+  .badge.moderate { background: var(--moderate); }
+  .badge.mild { background: var(--mild); }
+
+  .confidence-bar {
+    height: 6px;
+    background: var(--border);
+    border-radius: 3px;
+    overflow: hidden;
+    margin: 8px 0;
+  }
+  .confidence-fill { height: 100%; background: var(--primary); }
+
+  .desc { color: var(--muted); font-size: 0.9rem; margin: 6px 0; }
+  .advice { font-size: 0.9rem; margin-top: 8px; }
+  .tags { margin-top: 8px; }
+  .tag {
+    display: inline-block;
+    background: #eff6ff;
+    color: var(--primary-dark);
+    font-size: 0.75rem;
+    padding: 3px 8px;
+    border-radius: 999px;
+    margin: 2px 4px 2px 0;
+  }
+
+  .empty { color: var(--muted); text-align: center; padding: 20px; }
+  .config-hint {
+    font-size: 0.78rem;
+    color: var(--muted);
+    text-align: center;
+    margin-top: -10px;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>🩺 AI Health Symptom Assistant</h1>
+  <p>Describe how you're feeling — get informational guidance in seconds</p>
+</header>
+
+<div class="container">
+  <div class="card">
+    <label for="symptomInput"><strong>Describe your symptoms</strong></label>
+    <textarea id="symptomInput" placeholder="e.g. I have a runny nose, sore throat, and mild fever since yesterday..."></textarea>
+    <button id="checkBtn" onclick="checkSymptoms()">Check Symptoms</button>
+    <p class="disclaimer">
+      ⚠️ This tool provides general information only and is <strong>not a medical diagnosis</strong>.
+      Always consult a qualified healthcare provider. If this is a medical emergency, call your local
+      emergency number immediately.
+    </p>
+  </div>
+
+  <div id="results"></div>
+  <p class="config-hint">API base URL: <code id="apiUrlDisplay"></code> — change API_BASE_URL at the top of the script to point elsewhere.</p>
+</div>
+
+<script>
+  // Point this at your running backend (see backend/README section on deployment)
+  const API_BASE_URL = "http://localhost:8000";
+  document.getElementById("apiUrlDisplay").textContent = API_BASE_URL;
+
+  async function checkSymptoms() {
+    const input = document.getElementById("symptomInput").value.trim();
+    const resultsEl = document.getElementById("results");
+    const btn = document.getElementById("checkBtn");
+
+    if (!input) {
+      resultsEl.innerHTML = `<div class="card empty">Please describe your symptoms first.</div>`;
+      return;
+    }
+
+    btn.disabled = true;
+    btn.textContent = "Analyzing...";
+    resultsEl.innerHTML = `<div class="card empty">Analyzing symptoms...</div>`;
+
+    try {
+      const res = await fetch(`${API_BASE_URL}/symptoms/check`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text: input }),
+      });
+
+      if (!res.ok) throw new Error(`Server responded ${res.status}`);
+      const data = await res.json();
+      renderResults(data);
+    } catch (err) {
+      resultsEl.innerHTML = `
+        <div class="card">
+          <p style="color:#dc2626;"><strong>Couldn't reach the API.</strong></p>
+          <p class="desc">Make sure the backend is running at ${API_BASE_URL} (see README).<br>Error: ${err.message}</p>
+        </div>`;
+    } finally {
+      btn.disabled = false;
+      btn.textContent = "Check Symptoms";
+    }
+  }
+
+  function renderResults(data) {
+    const resultsEl = document.getElementById("results");
+    let html = "";
+
+    if (data.is_emergency) {
+      html += `<div class="emergency-banner">🚨 ${data.recommendation}</div>`;
+    } else {
+      html += `<div class="card" style="border-left:4px solid var(--primary);">
+        <strong>Risk level: ${data.risk_level.toUpperCase()}</strong>
+        <p class="desc" style="margin-top:6px;">${data.recommendation}</p>
+      </div>`;
+    }
+
+    if (!data.matches || data.matches.length === 0) {
+      html += `<div class="card empty">No matching conditions found. Try describing your symptoms with more detail, or consult a healthcare provider directly.</div>`;
+    } else {
+      html += `<div class="card"><h2 style="margin-top:0;">Possible Conditions</h2>`;
+      data.matches.forEach((m) => {
+        const pct = Math.round(m.confidence * 100);
+        html += `
+          <div class="match">
+            <div class="match-header">
+              <h3>${m.name}</h3>
+              <span class="badge ${m.severity}">${m.severity}</span>
+            </div>
+            <div class="confidence-bar"><div class="confidence-fill" style="width:${pct}%;"></div></div>
+            <p class="desc">${m.description}</p>
+            <p class="advice"><strong>Guidance:</strong> ${m.advice}</p>
+            <div class="tags">${m.matched_symptoms.map(s => `<span class="tag">${s}</span>`).join("")}</div>
+          </div>`;
+      });
+      html += `</div>`;
+    }
+
+    html += `<p class="disclaimer" style="text-align:center;">${data.disclaimer}</p>`;
+    resultsEl.innerHTML = html;
+  }
+
+  document.getElementById("symptomInput").addEventListener("keydown", (e) => {
+    if (e.key === "Enter" && e.ctrlKey) checkSymptoms();
+  });
+</script>
+
+</body>
+</html>
